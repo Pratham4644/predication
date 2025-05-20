@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-Time Traffic Detection | Signal is Green</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <header id="topbar">
+        <div id="logo"><i class="fas fa-traffic-light"></i> Signal is Green</div>
+        <input type="text" id="search-box" placeholder="Find places and landmarks on Map">
+        <div id="top-controls">
+            <button id="directions-btn"><i class="fas fa-directions"></i> Directions</button>
+            <button id="traffic-btn"><i class="fas fa-car"></i> Traffic</button>
+            <button id="places-btn"><i class="fas fa-map-marker-alt"></i> My Places</button>
+            <button id="more-btn"><i class="fas fa-ellipsis-h"></i> More</button>
+        </div>
+        <div id="user-controls">
+            <div id="gps-status" class="gps-inactive">
+                <span class="gps-icon"><i class="fas fa-satellite"></i></span>
+                <span class="gps-text">GPS Offline</span>
+            </div>
+            <button id="profile-icon"><i class="fas fa-user"></i></button>
+            <button id="menu-icon"><i class="fas fa-bars"></i></button>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div id="main-container">
+        <!-- Sidebar -->
+        <aside id="sidebar">
+            <h2><i class="fas fa-map-pin"></i> My Places</h2>
+            <div id="tabs">
+                <button class="tab active" id="favorites-tab"><i class="fas fa-star"></i> Favourites</button>
+                <button class="tab" id="collections-tab"><i class="fas fa-folder"></i> Collections</button>
+            </div>
+            <div id="favorites-content" class="tab-content active">
+                <div class="fav-place">
+                    <div class="icon"><i class="fas fa-home"></i></div>
+                    <div class="info">
+                        <h3>Home</h3>
+                        <p>Set a home address</p>
+                    </div>
+                </div>
+                <div class="fav-place">
+                    <div class="icon"><i class="fas fa-briefcase"></i></div>
+                    <div class="info">
+                        <h3>Work</h3>
+                        <p>Set a work address</p>
+                    </div>
+                </div>
+                <div class="add-fav-note">
+                    <p><i class="fas fa-plus-circle"></i> Add a place to your Favourites</p>
+                </div>
+            </div>
+            <div id="collections-content" class="tab-content">
+                <div class="collection-item">
+                    <h3><i class="fas fa-book"></i> Tutorial</h3>
+                    <ul>
+                        <li>signed</li>
+                        <li>viewership</li>
+                    </ul>
+                </div>
+                <div class="collection-item">
+                    <h3><i class="fas fa-photo-video"></i> Media - MTA-Scripti - Walwa</h3>
+                </div>
+                <div class="collection-item">
+                    <h3><i class="fas fa-users"></i> Mutup meeting works &...</h3>
+                </div>
+                <div class="collection-item">
+                    <h3><i class="fas fa-building"></i> Kohnoor Hall Margal Karyalay</h3>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Map Display -->
+        <section id="map-area">
+            <div id="map-controls">
+                <button id="map-view-btn" title="Map View"><i class="fas fa-map"></i></button>
+                <button id="traffic-layer-btn" title="Traffic Layer"><i class="fas fa-traffic-light"></i></button>
+                <button id="zoom-in-btn" title="Zoom In"><i class="fas fa-plus"></i></button>
+                <button id="zoom-out-btn" title="Zoom Out"><i class="fas fa-minus"></i></button>
+                <button id="compass-btn" title="Compass"><i class="fas fa-compass"></i></button>
+                <button id="report-btn" title="Report"><i class="fas fa-exclamation-triangle"></i></button>
+            </div>
+            <div id="map"></div>
+            <div id="location-info"><i class="fas fa-map-marker-alt"></i> India • MH • Sangli • Walwa</div>
+            <div id="traffic-status">
+                <div id="traffic-indicator">
+                    <span class="traffic-light" id="traffic-light-1"></span>
+                    <span class="traffic-light" id="traffic-light-2"></span>
+                    <span class="traffic-light" id="traffic-light-3"></span>
+                    <span id="traffic-message">Traffic: Moderate</span>
+                </div>
+            </div>
+            
+            <!-- Navigation Guidance -->
+            <div id="nav-guidance" class="hidden">
+                <div id="next-step"><i class="fas fa-arrow-right"></i></div>
+                <div id="step-details">
+                    <div id="step-instruction">Continue straight</div>
+                    <div id="step-distance">500 m</div>
+                    <div id="step-duration">2 min</div>
+                </div>
+                <div id="nav-stats">
+                    <div class="stat">
+                        <span><i class="fas fa-tachometer-alt"></i></span>
+                        <span id="current-speed">--</span>
+                        <span>km/h</span>
+                    </div>
+                    <div class="stat">
+                        <span><i class="fas fa-clock"></i></span>
+                        <span id="eta">--</span>
+                    </div>
+                    <div class="stat">
+                        <span><i class="fas fa-ruler"></i></span>
+                        <span id="distance-remaining">--</span>
+                    </div>
+                </div>
+                <div id="lane-guidance"></div>
+            </div>
+            
+            <button id="voice-toggle" class="map-control" title="Voice Guidance"><i class="fas fa-microphone"></i></button>
+            <div id="route-progress" class="hidden"></div>
+            
+            <!-- Directions Panel -->
+            <div id="directions-panel" class="hidden">
+                <h3><i class="fas fa-directions"></i> Directions</h3>
+                <div class="input-group">
+                    <input type="text" id="start-location" placeholder="Starting point">
+                    <input type="text" id="end-location" placeholder="Destination">
+                </div>
+                <button id="get-directions-btn"><i class="fas fa-route"></i> Get Directions</button>
+                <button id="start-navigation-btn" class="hidden"><i class="fas fa-play"></i> Start Navigation</button>
+                <div id="directions-result"></div>
+                <button id="close-directions-btn"><i class="fas fa-times"></i> Close</button>
+            </div>
+            
+            <!-- Traffic Report Modal -->
+            <div id="report-modal" class="modal hidden">
+                <div class="modal-content">
+                    <h3><i class="fas fa-exclamation-circle"></i> Report Traffic Issue</h3>
+                    <select id="issue-type">
+                        <option value="accident">Accident</option>
+                        <option value="congestion">Heavy Traffic</option>
+                        <option value="roadwork">Road Work</option>
+                        <option value="hazard">Road Hazard</option>
+                    </select>
+                    <textarea id="issue-description" placeholder="Additional details..."></textarea>
+                    <button id="submit-report"><i class="fas fa-paper-plane"></i> Submit Report</button>
+                    <button id="cancel-report"><i class="fas fa-times"></i> Cancel</button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- More Options Menu -->
+    <div id="more-menu" class="hidden">
+        <button class="more-option"><i class="fas fa-cog"></i> Settings</button>
+        <button class="more-option"><i class="fas fa-history"></i> History</button>
+        <button class="more-option"><i class="fas fa-bookmark"></i> Saved</button>
+        <button class="more-option"><i class="fas fa-download"></i> Offline Maps</button>
+        <button id="close-more-menu"><i class="fas fa-times"></i> Close</button>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="https://maps.gomaps.pro/maps/api/js?key=AlzaSyT4zrmrU0lT_sUwKEDqLBLIuTLZpZhldiQ&callback=initMap&libraries=places" async defer></script>
+</body>
+</html>
